@@ -39,5 +39,33 @@ Same as ellis.  See Project Ellis for more info: *meson* and *ninja*.
 
 ## Build instructions
 
-Same as ellis.  See Project Ellis for more info: *meson* and *ninja*.
+Generally the same as ellis.  There are helpful hints in the project ellis
+README file.  You'll need to build ellis first.
 
+#### First time builds, including building ellis
+
+```
+export MYOPT=$HOME/opt
+export LD_LIBRARY_PATH=\
+$MYOPT/lib:$MYOPT/lib/x86_64-linux-gnu
+export PKG_CONFIG_PATH=\
+$MYOPT/lib/pkgconfig:\
+$MYOPT/lib/x86_64-linux-gnu/pkgconfig
+pushd ../ellis && meson --prefix $MYOPT build && ninja -C build install && popd
+meson --prefix $MYOPT build
+ninja -C build
+```
+
+#### Rebuilding
+
+To rebuild at any time, you just need to rerun the last `ninja` command:
+
+```
+ninja -C build
+```
+
+#### Before checking in
+
+```
+ninja -C build test check
+```

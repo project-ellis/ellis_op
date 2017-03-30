@@ -33,7 +33,9 @@
 #include <ellis/core/node.hpp>
 #include <ellis/core/err.hpp>
 #include <ellis/codec/json.hpp>
-#include <ellis_private/using.hpp>
+#include <ellis_op/call_trace.hpp>
+#include <ellis_op/time.hpp>
+#include <ellis_op_private/using.hpp>
 #include <thread>
 
 /* Needed for server. */
@@ -41,11 +43,13 @@
 #include <nghttp2/asio_http2_client.h>
 #include <nghttp2/asio_http2_server.h>
 
-namespace ellis {
-namespace op {
+using namespace ellis;
+
+namespace ellis_op {
 
 using std::atomic;
 
+// TODO(jmc): rip this out at once!
 
 /**
  * Unique identifier for a request.
@@ -156,95 +160,6 @@ string get_debugid(const node &n)
       << "/" << get_strfield(n, "procedure")
       << "[" << get_strfield(n, "id") << "]");
 }
-
-/**
- * Time representation.
- *
- * Hopefully reduces misunderstandings and conversion accidents.
- */
-struct timeval {
-  int64_t m_nanos_since_epoch;
-  explicit operator int64_t() const {
-    return m_nanos_since_epoch;
-  }
-  timeval & operator=(const timeval &o) {
-    m_nanos_since_epoch = o.m_nanos_since_epoch;
-    return *this;
-  }
-  bool operator==(const timeval &o) {
-    return m_nanos_since_epoch == o.m_nanos_since_epoch;
-  }
-  bool operator!=(const timeval &o) {
-    return m_nanos_since_epoch != o.m_nanos_since_epoch;
-  }
-  bool operator>=(const timeval &o) {
-    return m_nanos_since_epoch >= o.m_nanos_since_epoch;
-  }
-  bool operator<=(const timeval &o) {
-    return m_nanos_since_epoch <= o.m_nanos_since_epoch;
-  }
-  bool operator<(const timeval &o) {
-    return m_nanos_since_epoch < o.m_nanos_since_epoch;
-  }
-  bool operator>(const timeval &o) {
-    return m_nanos_since_epoch > o.m_nanos_since_epoch;
-  }
-};
-
-timeval operator+(const timeval &a, const timeval &b)
-{
-  return { a.m_nanos_since_epoch + b.m_nanos_since_epoch };
-}
-
-timeval operator-(const timeval &a, const timeval &b)
-{
-  return { a.m_nanos_since_epoch - b.m_nanos_since_epoch };
-}
-
-
-timeval now()
-{
-  struct timespec ts;
-  clock_gettime(CLOCK_REALTIME_COARSE, &ts);
-  return { ts.tv_sec * 1000000000L + ts.tv_nsec };
-}
-
-/**
- * An element in a call execution trace.
- */
-struct trace_entry {
-  timeval m_time;
-  string m_stage;
-};
-
-/**
- * Timing/tracing info for a single call.
- */
-struct call_telemetry {
-  timeval m_start_time;
-  int64_t m_total_nanos = 0;
-  bool m_is_tracing = false;
-  vector<trace_entry> m_traces;
-};
-
-/**
- * Macro for execution tracing.
- *
- * We use a macro here, so that if tracing is not enabled, the cost is
- * minimized.
- *
- * Similar to regular logging, but takes a "stage" parameter, which must be a
- * simple character string constant (not a C++ string), and can be used for
- * building timing charts.
- */
-#define ELLIS_OP_TRACE(REQ, TELEM, STAGE) \
-  do { \
-    if ((TELEM)->m_is_tracing) { \
-      (TELEM)->m_traces.push_back({ now(), STAGE }); \
-    } \
-    ELLIS_LOG(DBUG, "%s: stage -> %s", \
-        get_debugid(*(REQ)).c_str(), STAGE); \
-  } while (0)
 
 /**
  * The owner of the data associated with a procedure call, while in progress.
@@ -923,12 +838,11 @@ public:
   }
 };
 
-}  /* namespace ::ellis::op */
-}  /* namespace ::ellis */
+}  /* namespace ::ellis_op */
 
 int main() {
 
-  using namespace ::ellis::op;
+  using namespace ::ellis_op;
   using namespace ::ellis;
 
   bool client_server_test = false;
