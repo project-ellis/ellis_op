@@ -1,0 +1,36 @@
+# Build
+/build*/
+
+# Binary
+*.o
+*.so
+*.os
+*.a
+*.pyc
+
+# Editor backup
+*.bak
+*~
+
+# Editor journaling
+*.swp
+
+# Cscope
+cscope.files
+cscope.out
+cscope.in.out
+cscope.po.out
+
+# Tags
+.ctags
+TAGS
+.TAGS
+!TAGS/
+tags
+.tags
+!tags/
+gtags.files
+GTAGS
+GRTAGS
+GPATH
+GSYMS
