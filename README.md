@@ -1,2 +1,39 @@
 # ellis-op
-Remote or local procedure callining interface, format agnostic via Ellis
+
+*Ellis Op* is an optional add-on to [Project Ellis](../ellis/README.md) that
+provides an RPC system which is format agnostic ala Ellis.
+
+Actually it is more properly called an asynchronous procedure call system.  It
+isn't necessarily remote.  Different modules can be registered for different
+types of requests, and the requests may be handled either locally or remotely.
+The caller does not know whether requests are handled locally or forwarded to
+a remote server, it just gets asynchronous notification when a response is
+available.
+
+## Warning
+
+This has just been migrated out of Ellis into a separate module, and needs
+some work before it will compile, and even more work before it can be used.
+
+## Build prerequisites
+
+#### Build tools
+
+Same as ellis.  See Project Ellis for more info: *meson* and *ninja*.
+
+#### Libraries
+
+* *ellis*
+- *boost-asio*
+- *boost-system*
+- *nghttp2* (>= 1.18.0). If you need to compile, use these flags for
+  configure:
+  *--with-jemalloc --enable-asio-lib*
+  Note that *--with-jemalloc* is technically optional but will improve
+  performance.
+- *openssl* (>= 1.0.2). (needed by nghttp2)
+
+## Build instructions
+
+Same as ellis.  See Project Ellis for more info: *meson* and *ninja*.
+
