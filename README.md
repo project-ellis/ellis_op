@@ -1,4 +1,4 @@
-# ellis-op
+# Ellis Op -- RPC
 
 *Ellis Op* is an optional add-on to
 [Project Ellis](https://github.com/project-ellis/ellis)
