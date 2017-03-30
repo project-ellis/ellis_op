@@ -1,7 +1,7 @@
 # ellis-op
 
 *Ellis Op* is an optional add-on to
-[Project Ellis](https://github.com/project-ellis/ellis-op)
+[Project Ellis](https://github.com/project-ellis/ellis)
 that provides an encoding-agnostic RPC system.
 
 Actually it is more properly called an asynchronous procedure call system.  It
