@@ -1,7 +1,8 @@
 # ellis-op
 
-*Ellis Op* is an optional add-on to [Project Ellis](../ellis/README.md) that
-provides an RPC system which is format agnostic ala Ellis.
+*Ellis Op* is an optional add-on to
+[Project Ellis](https://github.com/project-ellis/ellis-op)
+that provides an encoding-agnostic RPC system.
 
 Actually it is more properly called an asynchronous procedure call system.  It
 isn't necessarily remote.  Different modules can be registered for different
@@ -9,6 +10,9 @@ types of requests, and the requests may be handled either locally or remotely.
 The caller does not know whether requests are handled locally or forwarded to
 a remote server, it just gets asynchronous notification when a response is
 available.
+
+The requests and responses are ellis nodes that are automatically encoded
+and decoded into whatever format is needed.
 
 ## Warning
 
